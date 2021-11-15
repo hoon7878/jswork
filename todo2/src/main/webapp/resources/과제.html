@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>랜덤 숫자 맞추기</title>
+
+
+</head>
+
+<body>
+	<h1>Up & Down </h1>
+
+    <p>1에서 100 사이의 임의의 숫자를 선택. 10턴 이내에 추측할 수 있는지 확인. 귀하의 추측이 너무 높거나 낮으면 알려드림.</p>
+
+    <div class="form">
+      <label for="playerField">추측 입력: </label>  <!-- 추측된 값을 나중에 받도록 하는 역할. -->
+      <input type="text" id="playerField" class="playerField"> <!-- 추측된 값을 나중에 받도록 하는 역할. -->
+      <input type="submit" value="클릭" class="playerSubmit"> <!-- 추측된 값을 나중에 받도록 하는 역할. -->
+    </div>
+
+    <div class="resultParas">
+      <p class="player"></p>
+      <p class="lastResult"></p>
+      <p class="upAnddown"></p>
+    </div>
+  
+    <script>
+
+    var randomNumber = Math.round(Math.random() * 100) + 1;
+
+    var player = document.querySelector('.player');
+    var lastResult = document.querySelector('.lastResult');
+    var upAnddown = document.querySelector('.upAnddown');
+
+    var playerSubmit = document.querySelector('.playerSubmit');
+    var playerField = document.querySelector('.playerField');
+
+    var playerCount = 1;
+    
+    var resetButton;
+    
+    playerField.focus(); //  .focus()해당요소에 포커스를 부여하여 1.텍스트 창의 경우, 커서를 위치 시켜 바로 입력이 가능.
+                         //                              2. 버튼의 경우, 엔터 키를 눌렀을 때 클릭 효과를 냄.     
+    
+    function checkGuess() {
+    	  var playerGuess = Number(playerField.value); //텍스트 필드에서 입력된 현재 값들을 변수의 값으로 지정한다.
+    	 
+    	  if (playerCount === 1) {
+    		  player.textContent = '이미추측한거 : ';
+    	  }
+    	  player.textContent += playerGuess + ' ';
+
+    	  if (playerGuess === randomNumber) {
+    	   
+    		lastResult.textContent = '정 답';
+    	    
+    		lastResult.style.backgroundColor = 'pink';
+    	    
+    		upAnddown.textContent = '';
+    	    setGameOver();
+    	    
+    	  } else if (playerGuess === 10) {
+    	    lastResult.textContent = '게임 종료';
+    	    setGameOver();
+    	    
+    	  } else {
+    	    lastResult.textContent = '땡~!!';
+    	    lastResult.style.backgroundColor = 'yellowgreen';
+    	    
+    	    if(playerGuess < randomNumber) {
+    	    	upAnddown.textContent = 'Up!';
+    	    	
+    	    } else if(playerGuess > randomNumber) {
+    	    	upAnddown.textContent = 'Down!';
+    	    }
+    	  }
+
+    	  playerCount++;
+    	  playerField.value = '';
+    	  playerField.focus();
+    	}
+  		  playerSubmit.addEventListener('click', checkGuess);
+    
+    	function setGameOver() {
+    		  playerField.disabled = true;
+    		  playerSubmit.disabled = true;
+    		  resetButton = document.createElement('button');
+    		  resetButton.textContent = '새 게임';
+    		  document.body.appendChild(resetButton);
+    		  resetButton.addEventListener('click', resetGame);
+    		}
+    	
+    	function resetGame() {
+    		  playerCount = 1;
+
+    		  var resetParas = document.querySelectorAll('.resultParas p');
+    		 
+    		  for (var i = 0 ; i < resetParas.length ; i++) {
+    		    resetParas[i].textContent = '';
+    		  }
+
+    		  resetButton.parentNode.removeChild(resetButton);
+
+    		  playerField.disabled = false;
+    		  playerSubmit.disabled = false;
+    		  playerField.value = '';
+    		  playerField.focus();
+
+    		  lastResult.style.backgroundColor = 'white';
+
+    		  randomNumber = Math.round(Math.random() * 100) + 1;
+    		} 
+
+    </script>
+
+</body>
+</html>
